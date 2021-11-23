@@ -1,0 +1,22 @@
+const Discord = require('discord.js');
+
+const client = new Discord.Client();
+
+const prefix = '-j '
+
+client.once('ready', () => {
+    console.log('JLCC is online!');
+});
+
+client.on('message', message =>{
+    if(!message.content.startsWith(prefix) || message.author.bot) return;
+
+    const args = message.content.slice(prefix.length).split(/ +/);
+    const command = args.shift().toLowerCase();
+
+    if(command === 'ping'){
+        message.channel.send('pong!');
+    }
+});
+
+client.login('OTEyNDkzODI3MjYzMTk3MTg2.YZwwGQ.m_1EF6GudGk_WmsWTlcq5mOZ3ZY');
