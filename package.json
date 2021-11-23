@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/vhuynh100/JLCC-Discord-Bot#readme",
   "dependencies": {
-    "discord.js": "^12.5.3"
+    "discord.js": "^12.5.3",
+    "mongoose": "^6.0.13"
   }
 }
