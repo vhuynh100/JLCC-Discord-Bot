@@ -4,10 +4,21 @@ const WOKCommands = require('wokcommands')
 
 const client = new Discord.Client();
 
+const config = require('./config.json')
+const mongo = require('./mongo')
+
 const prefix = '-j '
 
-client.once('ready', () => {
+client.once('ready', async () => {
     console.log('JLCC is online!');
+
+    await mongo().then(mongoose => {
+        try {
+            console.log('Connected to mongo!')
+        } finally {
+            mongoose.connection.close()
+        }
+    })
 });
 
 client.on('message', message =>{
