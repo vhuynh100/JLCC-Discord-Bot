@@ -1,9 +1,11 @@
 const momentTimezone = require('moment-timezone')
 const { MessageCollector } = require('discord.js')
 
+const scheduledSchema = require('../models/scheduled-schema')
+
 module.exports = {
     requiredPermissions: ['ADMINISTRATOR'],
-    expectedArgs: '<Channel tag> <MM/DD/YYYY> <HH:MM> <"AM" OR "PM"> <Timezone>',
+    expectedArgs: '<Channel tag> <YYYY/MM/DD> <HH:MM> <"AM" OR "PM"> <Timezone>',
     minArgs: 5,
     maxArgs: 5,
     init: () => {},
@@ -12,7 +14,7 @@ module.exports = {
 
         const targetChannel = mentions.channels.first()
         if (!targetChannel) {
-            message.reply('Please enter a channel to send the message to.')
+            message.reply('Please tag a channel to send the message to.')
             return
         }
 
@@ -22,19 +24,19 @@ module.exports = {
         const [date, time, clockType, timeZone] = args
 
         if (clockType !== 'AM' && clockType !== 'PM') {
-            message.reply(`You must provide either "AM" or "PM". You provided "$ {clockType}"`)
+            message.reply(`You must provide either "AM" or "PM". You provided "${clockType}"`)
             return
         }
 
         const validTimeZones = momentTimezone.tz.names()
         if (!validTimeZones.includes(timeZone)) {
-            message.reply('Unknown timezone! Please use one of the following: <https://gist.github.com/AlexzanderFlores/d511a7c7e97b4c3ae60cb6e562f78300>')
+            message.reply('Unknown timezone!') // Please use one of the following: <https://gist.github.com/AlexzanderFlores/d511a7c7e97b4c3ae60cb6e562f78300>')
         return
         }
 
         const targetDate = momentTimezone.tz(
             `${date} ${time} ${clockType}`,
-            'MM/DD/YYYY HH:mm A',
+            'YYYY-MM-DD HH:mm A',
             timeZone
         )
 
@@ -46,20 +48,25 @@ module.exports = {
 
         const collector = new MessageCollector(channel, filter, {
             max: 1,
-            time: 1000 * 60 //60 seconds
+            time: 1000 * 60, //60 seconds
         })
 
         collector.on('end', async (collected) => {
             const collectedMessage = collected.first()
 
             if (!collectedMessage) {
-                message.reply('Message not received in time.')
+                message.reply('Message not received.')
                 return
             }
 
-            message.reply('Message scheduled') //Add a confirmation of date/time
+            message.reply('Message scheduled.') //Add a confirmation of date/time
 
-            // TODO: Save to the database
+            await new scheduledSchema({
+                date: targetDate.valueOf(),
+                content: collectedMessage.content,
+                guildId: guild.id,
+                channelId: targetChannel.id
+            }).save()
         })
     }
 }
