@@ -8,7 +8,39 @@ module.exports = {
     expectedArgs: '<Channel tag> <YYYY/MM/DD> <HH:MM> <"AM" OR "PM"> <Timezone>',
     minArgs: 5,
     maxArgs: 5,
-    init: () => {},
+    init: (client) => {
+        const checkForPosts = async () => {
+            const query = {
+                date: {
+                    $lte: Date.now()
+                }
+            }
+
+            const results = await scheduledSchema.find(query)
+
+            for (const post of results) {
+                const { guildId, channelId, content} = post
+
+                const guild = await client.guilds.fetch(guildId)
+                if (!guild) {
+                    continue
+                }
+
+                const channel = guild.channels.cache.get(channelId)
+                if (!channel) {
+                    continue
+                }
+
+                channel.send(content)
+            }
+
+            await scheduledSchema.deleteMany(query)
+
+            setTimeout(checkForPosts, 1000 * 10)
+        }
+
+        checkForPosts()
+    },
     callback: async ({ message, args }) => {
         const { mentions, guild, channel } = message
 
