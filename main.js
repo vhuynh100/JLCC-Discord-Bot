@@ -14,32 +14,8 @@ const client = new Discord.Client({
     ],
   })
 
-const config = require('./config.json')
-// const mongo = require('./mongo')
-
-const prefix = '-j ';
-
-// const fs = require('fs');
-
-// client.commands = new Discord.Collection();
-
-// const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
-// for (const file of commandFiles) {
-//     const command = require(`./commands/${file}`);
-
-//     client.commands.set(command.name, command)
-// }
-
-client.once('ready', async () => {  //add async back in before ()
+client.once('ready', () => {
     console.log('JLCC is online!');
-
-    // await mongo().then(mongoose => {
-    //     try {
-    //         console.log('Connected to mongo!')
-    //     } finally {
-    //         mongoose.connection.close()
-    //     }
-    // })
 
     new WOKCommands(client, {
         commandsDir: path.join(__dirname, 'commands'),
@@ -56,11 +32,6 @@ client.once('ready', async () => {  //add async back in before ()
 
 //     if(command === 'ping'){
 //         client.commands.get('ping').callback(message, args);
-//     }
-
-//     if(command === 'schedule'){
-//         // how to call the schdule command?
-//         client.commands.get('schedule').callback(message, args);
 //     }
 // });
 
