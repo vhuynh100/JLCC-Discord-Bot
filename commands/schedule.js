@@ -1,5 +1,5 @@
 const momentTimezone = require('moment-timezone')
-const { MessageCollector } = require('discord.js')
+// const { MessageCollector } = require('discord.js')
 
 const scheduledSchema = require('../models/scheduled-schema')
 
@@ -46,21 +46,21 @@ module.exports = {
             return newMessage.author.id === message.author.id
         }
 
-        const collector = new MessageCollector(channel, filter, {
+        const collector = channel.createMessageCollector({ filter, 
             max: 1,
-            time: 1000 * 60, //60 seconds
+            time: 1000 * 10, //10 seconds before time out
         })
 
         collector.on('end', async (collected) => {
             const collectedMessage = collected.first()
-
             if (!collectedMessage) {
                 message.reply('Message not received.')
                 return
             }
 
-            message.reply('Message scheduled.') //Add a confirmation of date/time
-
+            message.reply('Message scheduled.')
+            //Add a confirmation of date/time
+            
             await new scheduledSchema({
                 date: targetDate.valueOf(),
                 content: collectedMessage.content,
