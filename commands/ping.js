@@ -1,7 +1,8 @@
 module.exports = {
     name: 'ping',
-    description: "This is a ping command!",
-    callback(message, args) {
-        message.channel.send('pong!')
-    }
+    category: 'Testing',
+    description: 'Replies with Pong!',
+    callback: ({message}) => {
+        message.reply('pong!')
+    },
 }
