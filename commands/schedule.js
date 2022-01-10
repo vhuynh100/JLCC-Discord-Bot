@@ -4,6 +4,8 @@ const momentTimezone = require('moment-timezone')
 const scheduledSchema = require('../models/scheduled-schema')
 
 module.exports = {
+    category: 'Utility',
+    description: 'Schedules a message to send at a later time',
     requiredPermissions: ['ADMINISTRATOR'],
     expectedArgs: '<Channel tag> <YYYY/MM/DD> <HH:MM> <"AM" OR "PM"> <Timezone>',
     minArgs: 5,
@@ -80,7 +82,7 @@ module.exports = {
 
         const collector = channel.createMessageCollector({ filter, 
             max: 1,
-            time: 1000 * 10, //10 seconds before time out
+            time: 1000 * 30, //30 seconds before time out
         })
 
         collector.on('end', async (collected) => {
