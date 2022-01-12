@@ -93,8 +93,7 @@ module.exports = {
             }
 
             const msgId = Math.floor(Math.random()*100)
-            message.reply(`Message scheduled. ID: ${msgId}`)
-            //Add a confirmation of date/time
+            message.reply(`Message scheduled for ${targetDate} in ${targetChannel}. ID: ${msgId}`)
             
             await new scheduledSchema({
                 date: targetDate.valueOf(),
