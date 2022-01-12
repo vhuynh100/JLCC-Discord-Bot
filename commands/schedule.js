@@ -92,7 +92,7 @@ module.exports = {
                 return
             }
 
-            const msgId = Math.floor(Math.random()*100)
+            const msgId = Math.floor(Math.random()*10000)
             message.reply(`Message scheduled for ${targetDate} in ${targetChannel}. ID: ${msgId}`)
             
             await new scheduledSchema({
