@@ -20,19 +20,9 @@ client.once('ready', () => {
     new WOKCommands(client, {
         commandsDir: path.join(__dirname, 'commands'),
         mongoUri: process.env.MONGO_URI,
+        testServers: ['844986163869646888'],
     })
     .setDefaultPrefix('-j ')
 });
-
-// client.on('messageCreate', message =>{
-//     if(!message.content.startsWith(prefix) || message.author.bot) return;
-
-//     const args = message.content.slice(prefix.length).split(/ +/);
-//     const command = args.shift().toLowerCase();
-
-//     if(command === 'ping'){
-//         client.commands.get('ping').callback(message, args);
-//     }
-// });
 
 client.login(process.env.DISCORD_TOKEN);
