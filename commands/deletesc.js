@@ -11,6 +11,15 @@ module.exports = {
     callback: async ({ message, args }) => {
         const id = args
 
+        const result = await scheduledSchema.exists({
+            messageId: `${id}`
+        })
+
+        if (result === false) {
+            message.reply('Error: Message not found.')
+            return
+        }
+
         await scheduledSchema.deleteOne({
             messageId: `${id}`,
         })
