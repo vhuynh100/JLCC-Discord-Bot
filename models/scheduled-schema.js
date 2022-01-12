@@ -13,6 +13,7 @@ const scheduledSchema = new mongoose.Schema({
     content: reqString,
     guildId: reqString,
     channelId: reqString,
+    messageId: reqString,
 })
 
 const name = 'scheduled-posts'
