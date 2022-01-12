@@ -21,7 +21,7 @@ module.exports = {
             const results = await scheduledSchema.find(query)
 
             for (const post of results) {
-                const { guildId, channelId, content} = post
+                const { guildId, channelId, content } = post
 
                 const guild = await client.guilds.fetch(guildId)
                 if (!guild) {
@@ -92,14 +92,16 @@ module.exports = {
                 return
             }
 
-            message.reply('Message scheduled.')
+            const msgId = Math.floor(Math.random()*100)
+            message.reply(`Message scheduled. ID: ${msgId}`)
             //Add a confirmation of date/time
             
             await new scheduledSchema({
                 date: targetDate.valueOf(),
                 content: collectedMessage.content,
                 guildId: guild.id,
-                channelId: targetChannel.id
+                channelId: targetChannel.id,
+                messageId: msgId,
             }).save()
         })
     }
