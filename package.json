@@ -22,8 +22,8 @@
     "moment-timezone": "^0.5.34",
     "mongoose": "^6.0.13",
     "nodemon": "^2.0.15",
+    "unofficial-jisho-api": "^2.2.2",
     "wokcommands": "^1.5.3"
   },
-  "devDependencies": {},
   "keywords": []
 }
