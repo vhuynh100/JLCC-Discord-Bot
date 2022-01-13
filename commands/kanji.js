@@ -6,16 +6,23 @@ module.exports = {
     category: 'Dictionary',
     description: 'Gives information on kanji',
     permissions: ['ADMINISTRATOR'],
-    // expectedArgs: '<messageId>',
-    // minArgs: 1,
-    // maxArgs: 1,
+    expectedArgs: '<kanji>',
+    minArgs: 1,
+    maxArgs: 1,
     callback: ({ message, args }) => {
-        // const kanji = args
+        const kanji = args
 
         const jisho = new JishoAPI();
-        jisho.searchForKanji('語').then(result => {
+
+        jisho.searchForKanji(`${kanji}`).then(result => {
+            if (result.found === false) {
+                message.reply("Invalid kanji!")
+                return
+            }
+
             const embed = new MessageEmbed()
-                .setDescription('語')
+                .setDescription(`${kanji}`)
+                .setColor('#a0df61')
                 .addFields(
                     {
                         name: 'Meaning',
@@ -41,11 +48,6 @@ module.exports = {
                     },
                 )
             message.reply({ embeds: [embed] })
-            // console.log('Meaning: ' + result.meaning)
-            // console.log('Kunyomi: ' + JSON.stringify(result.kunyomi));
-            // console.log('Kunyomi example: ' + JSON.stringify(result.kunyomiExamples[0]));
-            // console.log('Onyomi: ' + JSON.stringify(result.onyomi));
-            // console.log('Onyomi example: ' + JSON.stringify(result.onyomiExamples[0]));
         })
     },
 }
