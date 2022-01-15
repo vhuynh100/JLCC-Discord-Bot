@@ -16,8 +16,29 @@ module.exports = {
 
         jisho.searchForKanji(`${kanji}`).then(result => {
             if (result.found === false) {
-                message.reply("Invalid kanji!")
+                message.reply("Kanji not found!")
                 return
+            }
+
+            var _kunyomi = JSON.stringify(result.kunyomi)
+            var _onyomi = JSON.stringify(result.onyomi)
+            var _kunyomiEx = JSON.stringify(result.kunyomiExamples[0])
+            var _onyomiEx = JSON.stringify(result.onyomiExamples[0])
+
+            if (!_kunyomi) {
+              _kunyomi = "n/a"
+            }
+
+            if (!_onyomi) {
+              _onyomi = "n/a"
+            }
+
+            if (!_kunyomiEx) {
+              _kunyomiEx = "n/a"
+            }
+
+            if (!_onyomiEx) {
+              _onyomiEx = "n/a"
             }
 
             const embed = new MessageEmbed()
@@ -30,21 +51,21 @@ module.exports = {
                     },
                     {
                         name: 'Kunyomi',
-                        value: JSON.stringify(result.kunyomi),
+                        value: _kunyomi,
                         inline: true
                     },
                     {
                         name: 'Onyomi',
-                        value: JSON.stringify(result.onyomi),
+                        value: _onyomi,
                         inline: true
                     },
                     {
                         name: 'Kunyomi example',
-                        value: JSON.stringify(result.kunyomiExamples[0])
+                        value: _kunyomiEx
                     },
                     {
                         name: 'Onyomi example',
-                        value: JSON.stringify(result.onyomiExamples[0])
+                        value: _onyomiEx
                     },
                 )
             message.reply({ embeds: [embed] })
