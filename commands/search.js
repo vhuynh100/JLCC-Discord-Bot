@@ -30,13 +30,17 @@ module.exports = {
 
             // var info = getInfo()
             // var slugString = JSON.stringify(result.data[0].slug)
-            
 
             const embed = new MessageEmbed()
                 .setDescription(`Results for '${input}'`)
                 .setColor('#a0df61')
             
-            for (let i = 0; i < 3; i++) {
+            var numResults // allows following for loop to loop up to 3 times, but can loop less
+            if (result.data.length < 3)
+                numResults = result.data.length
+            else numResults = 3
+
+            for (let i = 0; i < numResults; i++) {
 
                 //parse the part of speech from JSON format
                 var partOfSpeech_par = JSON.stringify(result.data[i].senses[0].parts_of_speech).replace(
