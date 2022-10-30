@@ -1,5 +1,6 @@
 const JishoAPI = require("unofficial-jisho-api")
 const { MessageEmbed } = require("discord.js")
+const fs = require('fs')
 
 module.exports = {
     category: 'Dictionary',
@@ -18,21 +19,14 @@ module.exports = {
                 message.reply("Word/phrase not found!")
                 return
             }
-            console.log(result)
-            // for(let i=0;i<7;i++) {  //7 is the number of attributes
-                // message.reply(JSON.stringify(result.data[0].slug))
-            // }
-            // function getInfo() {
-                // for (const [key, value] of Object.entries(result.data)) {
-                //     console.log(`${key}: ${value}`)
-                // }
-            // }
 
-            // var info = getInfo()
-            // var slugString = JSON.stringify(result.data[0].slug)
+            // write result to a file
+            fs.writeFile('output.txt', JSON.stringify(result.data[0].japanese[0]), (err) => {
+                if(err) throw err;
+            });
 
             const embed = new MessageEmbed()
-                .setDescription(`Results for '${input}'`)
+                .setDescription(`Results for ${input}`)
                 .setColor('#a0df61')
             
             var numResults // allows following for loop to loop up to 3 times, but can loop less
@@ -40,34 +34,64 @@ module.exports = {
                 numResults = result.data.length
             else numResults = 3
 
-            for (let i = 0; i < numResults; i++) {
+            // print word/phrase properties
+            var resultPrintable = "" // holds result to be printed
+            for (let i = 0; i < numResults; i++) { // loops thru each result
+                var resultPrintable = "" // reset result
 
-                //parse the part of speech from JSON format
-                var partOfSpeech_par = JSON.stringify(result.data[i].senses[0].parts_of_speech).replace(
-                    JSON.stringify(result.data[i].senses[0].parts_of_speech).indexOf('"') + 1,
-                    JSON.stringify(result.data[i].senses[0].parts_of_speech).lastIndexOf('"')
-                );
-                partOfSpeech_par = partOfSpeech_par.replaceAll('"', ' ');
-                partOfSpeech_par = partOfSpeech_par.replaceAll('[', '');
-                partOfSpeech_par = partOfSpeech_par.replaceAll(']', '');
+                if(result.data[i].is_common == true) { // print if it is a common word
+                    resultPrintable += "-common word-"
+                }
 
                 //parse the reading from JSON format
-                var reading_par = JSON.stringify(result.data[i].japanese[0].reading).substring(
-                    JSON.stringify(result.data[i].japanese[0].reading).indexOf('"') + 1,
-                    JSON.stringify(result.data[i].japanese[0].reading).lastIndexOf('"')
-                );
+                var reading_par = "" //holds the parsed reading
+                if(Object.keys(result.data[i].japanese[0]).length > 1) { // check if the word has a reading
+                    reading_par = JSON.stringify(result.data[i].japanese[0].reading) // get reading
+                    reading_par = reading_par.replaceAll('"', '') // remove all double quotes
 
-                var definition_par = JSON.stringify(result.data[i].senses[0].english_definitions)
-                definition_par = definition_par.replaceAll('[', '');
-                definition_par = definition_par.replaceAll(']', '');
+                    resultPrintable += `\nReading: 「${reading_par}」` // add parsed reading to result to be printed
+                }
 
-                embed.addField(`'${result.data[i].japanese[0].word}'`, `
-                Part of Speech: ${partOfSpeech_par}
-                Reading: 『${reading_par}』
-                Definition: ${definition_par}`)
+                // senses = number of definitions
+                // check if num definitions > 3. if yes, only take the first 3.
+                var sensesLength
+                if(result.data[i].senses.length < 3)
+                    sensesLength = result.data[i].senses.length
+                else sensesLength = 3
+
+                for (let j = 0; j < sensesLength; j++) { // loops thru each definition
+
+                    //parse the part of speech from JSON format
+                    var partOfSpeech_par = JSON.stringify(result.data[i].senses[j].parts_of_speech)
+                    partOfSpeech_par = partOfSpeech_par.replaceAll('"', ''); // remove double quotes
+                    partOfSpeech_par = partOfSpeech_par.replaceAll('[', ''); //remove brackets
+                    partOfSpeech_par = partOfSpeech_par.replaceAll(']', ''); // "
+
+                    //parse definition from JSON
+                    var definition_par = JSON.stringify(result.data[i].senses[j].english_definitions)
+                    definition_par = definition_par.replaceAll('"', '');
+                    definition_par = definition_par.replaceAll('[', '');
+                    definition_par = definition_par.replaceAll(']', '');
+                    definition_par = definition_par.replaceAll(" ,", ','); // replace space+comma with only comma
+
+                    // print all parsed definitions
+                    resultPrintable += '\n\n' // add line breaks
+
+                    resultPrintable += `${partOfSpeech_par}` // add parsed part of speech to result to be printed
+                    resultPrintable += `\n${j+1}. ${definition_par}` // add parsed definition to result to be printed
+                }
+
+                // note: white space/indents matter in the string literal
+                embed.addField(`【${result.data[i].japanese[0].word}】`, resultPrintable) // add fields (search results) to the embed in the form - word: properties
+
             }
 
-            message.reply({ embeds: [embed] })
-        })
+            message.reply({ embeds: [embed] }) // reply to cmd
+                
+
+            
+            },
+
+        )
     },
 }
