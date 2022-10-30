@@ -69,7 +69,7 @@ module.exports = {
 
                     //parse definition from JSON
                     var definition_par = JSON.stringify(result.data[i].senses[j].english_definitions)
-                    definition_par = definition_par.replaceAll('"', '');
+                    definition_par = definition_par.replaceAll('"', ' ');
                     definition_par = definition_par.replaceAll('[', '');
                     definition_par = definition_par.replaceAll(']', '');
                     definition_par = definition_par.replaceAll(" ,", ','); // replace space+comma with only comma
