@@ -26,7 +26,7 @@ module.exports = {
             // });
 
             const embed = new MessageEmbed()
-                .setDescription(`Results for ${input}`)
+                // .setDescription(`Results for ${input}`)
                 .setColor('#a0df61')
             
             var numResults // allows following for loop to loop up to 3 times, but can loop less
