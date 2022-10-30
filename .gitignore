@@ -1,3 +1,5 @@
 .env
 node_modules
 commands/listsched.js
+jsonformat.txt
+output.txt

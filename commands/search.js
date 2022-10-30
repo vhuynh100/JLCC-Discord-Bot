@@ -21,9 +21,9 @@ module.exports = {
             }
 
             // write result to a file
-            fs.writeFile('output.txt', JSON.stringify(result.data[0].japanese[0]), (err) => {
-                if(err) throw err;
-            });
+            // fs.writeFile('output.txt', JSON.stringify(result.data[0].japanese[0]), (err) => {
+            //     if(err) throw err;
+            // });
 
             const embed = new MessageEmbed()
                 .setDescription(`Results for ${input}`)
@@ -88,8 +88,6 @@ module.exports = {
 
             message.reply({ embeds: [embed] }) // reply to cmd
                 
-
-            
             },
 
         )
