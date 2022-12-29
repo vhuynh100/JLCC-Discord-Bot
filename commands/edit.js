@@ -24,7 +24,7 @@ module.exports = {
         .then(fetchedMessage => {
             // Do something with the fetched message
             
-            message.reply('Please enter the edited message.')
+            message.reply('Please enter the new message.')
             
             // Get the edited message
             const filter = (newMessage) => {
